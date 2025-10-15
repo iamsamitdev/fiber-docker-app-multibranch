@@ -1,0 +1,23 @@
+services:
+  app-dev:
+    # สร้าง image จาก Dockerfile แต่จะใช้แค่ 'builder' stage เป็นฐาน
+    # เพื่อให้มี Go development tools ครบ
+    build:
+      context: .
+      target: builder # <-- บอกให้ build ถึงแค่ stage 'builder'
+    container_name: fiber-app-dev-instance
+    ports:
+      - "9002:9000" # Map port 9002 (host) -> 9000 (container)
+    volumes:
+      # เชื่อมโค้ดจากเครื่องเราเข้าไปใน container แบบ Real-time
+      - ./main.go:/app/main.go:ro
+      - ./go.mod:/app/go.mod:ro
+      - ./go.sum:/app/go.sum:ro
+      - ./.air.toml:/app/.air.toml:ro
+    environment:
+      - PORT=9000
+      - CGO_ENABLED=0
+    # รันด้วย go run เพื่อ development
+    command: go run main.go
+    stdin_open: true
+    tty: true
