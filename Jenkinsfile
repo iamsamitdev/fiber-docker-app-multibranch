@@ -281,6 +281,9 @@ pipeline {
                         echo "Could not clean up images, but continuing..."
                     }
                 }
+                // ส่วนของการลบ Workspace
+                echo "Cleaning up workspace..."
+                cleanWs()
             }
         }
         failure {
